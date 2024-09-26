@@ -1,4 +1,5 @@
 #! /bin/bash
+ls -la
 make -C docs clean 
 # sphinx-apidoc -f -o docs/source . -H Test -e -t docs/source/_templates
 make -C docs html
