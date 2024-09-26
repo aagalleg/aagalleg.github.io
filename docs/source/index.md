@@ -14,5 +14,6 @@
 :maxdepth: 2
 
 usage
+test
 ```
 
