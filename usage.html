@@ -1,0 +1,577 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="TestOp" href="index.html" />
+
+    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+        <title>Build MegaService of CodeGen on Xeon - TestOp 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">TestOp 0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">TestOp 0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Build MegaService of CodeGen on Xeon</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/usage.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="build-megaservice-of-codegen-on-xeon">
+<h1>Build MegaService of CodeGen on Xeon<a class="headerlink" href="#build-megaservice-of-codegen-on-xeon" title="Link to this heading">¶</a></h1>
+<p>This document outlines the deployment process for a CodeGen application utilizing the <a class="reference external" href="https://github.com/opea-project/GenAIComps.git">GenAIComps</a> microservice pipeline on Intel Xeon server. The steps include Docker images creation, container deployment via Docker Compose, and service execution to integrate microservices such as <code class="docutils literal notranslate"><span class="pre">llm</span></code>. We will publish the Docker images to Docker Hub soon, further simplifying the deployment process for this service.</p>
+<section id="create-an-aws-xeon-instance">
+<h2>🚀 Create an AWS Xeon Instance<a class="headerlink" href="#create-an-aws-xeon-instance" title="Link to this heading">¶</a></h2>
+<p>To run the example on an AWS Xeon instance, start by creating an AWS account if you don’t have one already. Then, get started with the <a class="reference external" href="https://console.aws.amazon.com/ec2/v2/home">EC2 Console</a>. AWS EC2 M7i, C7i, C7i-flex and M7i-flex instances are next-generation compute optimized instances powered by custom 4th Generation Intel Xeon Scalable processors (code named Sapphire Rapids). These instances are optimized for high-performance computing and demanding workloads.</p>
+<p>For detailed information about these instance types, you can refer to <a class="reference external" href="https://aws.amazon.com/ec2/instance-types/m7i/">m7i</a>. Once you’ve chosen the appropriate instance type, proceed with configuring your instance settings, including network configurations, security groups, and storage options.</p>
+<p>After launching your instance, you can connect to it using SSH (for Linux instances) or Remote Desktop Protocol (RDP) (for Windows instances). From there, you’ll have full access to your Xeon server, allowing you to install, configure, and manage your applications as needed.</p>
+</section>
+<section id="build-docker-images">
+<h2>🚀 Build Docker Images<a class="headerlink" href="#build-docker-images" title="Link to this heading">¶</a></h2>
+<p>First of all, you need to build the Docker images locally. This step can be ignored after the Docker images published to the Docker Hub.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">WORKSPACE</span><span class="o">=</span><span class="nv">$PWD</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p $WORKSPACE &amp;&amp; cd $WORKSPACE
+</pre></div>
+</div>
+<section id="git-clone-genaicomps">
+<h3>1. Git Clone GenAIComps<a class="headerlink" href="#git-clone-genaicomps" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/opea-project/GenAIComps.git
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIComps
+git<span class="w"> </span>checkout<span class="w"> </span>v0.9
+</pre></div>
+</div>
+</section>
+<section id="build-the-llm-docker-image">
+<h3>2. Build the LLM Docker Image<a class="headerlink" href="#build-the-llm-docker-image" title="Link to this heading">¶</a></h3>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>opea/llm-tgi:latest<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$https_proxy</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span><span class="w"> </span>-f<span class="w"> </span>comps/llms/text-generation/tgi/Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="build-the-megaservice-docker-image">
+<h3>3. Build the MegaService Docker Image<a class="headerlink" href="#build-the-megaservice-docker-image" title="Link to this heading">¶</a></h3>
+<p>To construct the Mega Service, we utilize the <a class="reference external" href="https://github.com/opea-project/GenAIComps.git">GenAIComps</a> microservice pipeline within the <code class="docutils literal notranslate"><span class="pre">codegen.py</span></code> Python script. Build MegaService Docker image via the command below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/opea-project/GenAIExamples
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/
+git<span class="w"> </span>checkout<span class="w"> </span>v0.9
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/CodeGen/docker
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>opea/codegen:latest<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$https_proxy</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span><span class="w"> </span>-f<span class="w"> </span>Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="build-the-ui-docker-image">
+<h3>4. Build the UI Docker Image<a class="headerlink" href="#build-the-ui-docker-image" title="Link to this heading">¶</a></h3>
+<p>Build the frontend Docker image via the command below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/CodeGen/docker/ui/
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>opea/codegen-ui:latest<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$https_proxy</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span><span class="w"> </span>-f<span class="w"> </span>./docker/Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Then run the command <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">images</span></code>, you will have the following 3 Docker Images:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">opea/llm-tgi:latest</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opea/codegen:latest</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opea/codegen-ui:latest</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="start-microservices-and-megaservice">
+<h2>🚀 Start Microservices and MegaService<a class="headerlink" href="#start-microservices-and-megaservice" title="Link to this heading">¶</a></h2>
+<p>The CodeGen megaservice manages a single microservice called LLM within a Directed Acyclic Graph (DAG). In the diagram above, the LLM microservice is a language model microservice that generates code snippets based on the user’s input query. The TGI service serves as a text generation interface, providing a RESTful API for the LLM microservice. The CodeGen Gateway acts as the entry point for the CodeGen application, invoking the Megaservice to generate code snippets in response to the user’s input query.</p>
+<p>The mega flow of the CodeGen application, from user’s input query to the application’s output response, is as follows:</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+    subgraph CodeGen
+        direction LR
+        A[User] --&gt; |Input query| B[CodeGen Gateway]
+        B --&gt; |Invoke| Megaservice
+        subgraph Megaservice[&quot;Megaservice&quot;]
+            direction TB
+            C((LLM&lt;br&gt;9000)) -. Post .-&gt; D{{TGI Service&lt;br&gt;8028}}
+        end
+        Megaservice --&gt; |Output| E[Response]
+    end
+
+    subgraph Legend
+        direction LR
+        G([Microservice]) ==&gt; H([Microservice])
+        I([Microservice]) -.-&gt; J{{Server API}}
+    end
+</pre></div>
+</div>
+<section id="setup-environment-variables">
+<h3>Setup Environment Variables<a class="headerlink" href="#setup-environment-variables" title="Link to this heading">¶</a></h3>
+<p>Since the <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> will consume some environment variables, you need to setup them in advance as below.</p>
+<p><strong>Append the value of the public IP address to the no_proxy list</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export your_no_proxy=${your_no_proxy},&quot;External_Public_IP&quot;
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">no_proxy</span><span class="o">=</span><span class="si">${</span><span class="nv">no_proxy</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="si">${</span><span class="nv">http_proxy</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="si">${</span><span class="nv">https_proxy</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">host_ip</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-I<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">HUGGINGFACEHUB_API_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">your_hf_api_token</span><span class="si">}</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LLM_MODEL_ID</span><span class="o">=</span><span class="s2">&quot;meta-llama/CodeLlama-7b-hf&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TGI_LLM_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span><span class="s2">:8028&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MEGA_SERVICE_HOST_IP</span><span class="o">=</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LLM_SERVICE_HOST_IP</span><span class="o">=</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BACKEND_SERVICE_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span><span class="s2">:7778/v1/codegen&quot;</span>
+</pre></div>
+</div>
+<p>Note: Please replace the <code class="docutils literal notranslate"><span class="pre">host_ip</span></code> with you external IP address, do not use <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p>
+</section>
+<section id="start-the-docker-containers-for-all-services">
+<h3>Start the Docker Containers for All Services<a class="headerlink" href="#start-the-docker-containers-for-all-services" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/CodeGen/docker/xeon
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+</section>
+<section id="validate-the-microservices-and-megaservice">
+<h3>Validate the MicroServices and MegaService<a class="headerlink" href="#validate-the-microservices-and-megaservice" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>TGI Service</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://<span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>:8028/generate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;inputs&quot;:&quot;Implement a high-level API for a TODO list application. The API takes as input an operation request and updates the TODO list in place. If the request is invalid, raise an exception.&quot;,&quot;parameters&quot;:{&quot;max_new_tokens&quot;:256, &quot;do_sample&quot;: true}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>LLM Microservices</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://<span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>:9000/v1/chat/completions<span class="se">\</span>
+<span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;Implement a high-level API for a TODO list application. The API takes as input an operation request and updates the TODO list in place. If the request is invalid, raise an exception.&quot;,&quot;max_new_tokens&quot;:256,&quot;top_k&quot;:10,&quot;top_p&quot;:0.95,&quot;typical_p&quot;:0.95,&quot;temperature&quot;:0.01,&quot;repetition_penalty&quot;:1.03,&quot;streaming&quot;:true}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>MegaService</p></li>
+</ol>
+<p>Hola</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://<span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>:7778/v1/codegen<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">     &quot;messages&quot;: &quot;Implement a high-level API for a TODO list application. The API takes as input an operation request and updates the TODO list in place. If the request is invalid, raise an exception.&quot;</span>
+<span class="s1">     }&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="launch-the-ui">
+<h2>🚀 Launch the UI<a class="headerlink" href="#launch-the-ui" title="Link to this heading">¶</a></h2>
+<p>To access the frontend, open the following URL in your browser: <code class="docutils literal notranslate"><span class="pre">http://{host_ip}:5173</span></code>. By default, the UI runs on port 5173 internally. If you prefer to use a different host port to access the frontend, you can modify the port mapping in the <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> file as shown below:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nt">codegen-xeon-ui-server</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">opea/codegen-ui:latest</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:5173&quot;</span>
+</pre></div>
+</div>
+<p><img alt="project-screenshot" src="../../assets/img/codeGen_ui_init.jpg" /></p>
+<p>Here is an example of running CodeGen in the UI:</p>
+<p><img alt="project-screenshot" src="../../assets/img/codeGen_ui_response.png" /></p>
+</section>
+<section id="launch-the-react-based-ui-optional">
+<h2>🚀 Launch the React Based UI (Optional)<a class="headerlink" href="#launch-the-react-based-ui-optional" title="Link to this heading">¶</a></h2>
+<p>To access the React-based frontend, modify the UI service in the <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> file. Replace <code class="docutils literal notranslate"><span class="pre">codegen-xeon-ui-server</span></code> service with the <code class="docutils literal notranslate"><span class="pre">codegen-xeon-react-ui-server</span></code> service as per the config below:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">codegen-xeon-react-ui-server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${REGISTRY:-opea}/codegen-react-ui:${TAG:-latest}</span>
+<span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codegen-xeon-react-ui-server</span>
+<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_proxy=${no_proxy}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https_proxy=${https_proxy}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http_proxy=${http_proxy}</span>
+<span class="w">  </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codegen-xeon-backend-server</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5174:80&quot;</span>
+<span class="w">  </span><span class="nt">ipc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="w">  </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+</pre></div>
+</div>
+<p><img alt="project-screenshot" src="../../assets/img/codegen_react.png" /></p>
+</section>
+<section id="install-copilot-vscode-extension-from-plugin-marketplace-as-the-frontend">
+<h2>Install Copilot VSCode extension from Plugin Marketplace as the frontend<a class="headerlink" href="#install-copilot-vscode-extension-from-plugin-marketplace-as-the-frontend" title="Link to this heading">¶</a></h2>
+<p>In addition to the Svelte UI, users can also install the Copilot VSCode extension from the Plugin Marketplace as the frontend.</p>
+<p>Install <code class="docutils literal notranslate"><span class="pre">Neural</span> <span class="pre">Copilot</span></code> in VSCode as below.</p>
+<p><img alt="Install-screenshot" src="../../assets/img/codegen_copilot.png" /></p>
+<section id="how-to-use">
+<h3>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading">¶</a></h3>
+<section id="service-url-setting">
+<h4>Service URL Setting<a class="headerlink" href="#service-url-setting" title="Link to this heading">¶</a></h4>
+<p>Please adjust the service URL in the extension settings based on the endpoint of the code generation backend service.</p>
+<p><img alt="Setting-screenshot" src="../../assets/img/codegen_settings.png" />
+<img alt="Setting-screenshot" src="../../assets/img/codegen_endpoint.png" /></p>
+</section>
+<section id="customize">
+<h4>Customize<a class="headerlink" href="#customize" title="Link to this heading">¶</a></h4>
+<p>The Copilot enables users to input their corresponding sensitive information and tokens in the user settings according to their own needs. This customization enhances the accuracy and output content to better meet individual requirements.</p>
+<p><img alt="Customize" src="../../assets/img/codegen_customize.png" /></p>
+</section>
+<section id="code-suggestion">
+<h4>Code Suggestion<a class="headerlink" href="#code-suggestion" title="Link to this heading">¶</a></h4>
+<p>To trigger inline completion, you’ll need to type <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">{your</span> <span class="pre">keyword}</span> <span class="pre">(start</span> <span class="pre">with</span> <span class="pre">your</span> <span class="pre">programming</span> <span class="pre">language's</span> <span class="pre">comment</span> <span class="pre">keyword,</span> <span class="pre">like</span> <span class="pre">//</span> <span class="pre">in</span> <span class="pre">C++</span> <span class="pre">and</span> <span class="pre">#</span> <span class="pre">in</span> <span class="pre">python)</span></code>. Make sure the <code class="docutils literal notranslate"><span class="pre">Inline</span> <span class="pre">Suggest</span></code> is enabled from the VS Code Settings.
+For example:</p>
+<p><img alt="code suggestion" src="../../assets/img/codegen_suggestion.png" /></p>
+<p>To provide programmers with a smooth experience, the Copilot supports multiple ways to trigger inline code suggestions. If you are interested in the details, they are summarized as follows:</p>
+<ul class="simple">
+<li><p>Generate code from single-line comments: The simplest way introduced before.</p></li>
+<li><p>Generate code from consecutive single-line comments:</p></li>
+</ul>
+<p><img alt="codegen from single-line comments" src="../../assets/img/codegen_single_line.png" /></p>
+<ul class="simple">
+<li><p>Generate code from multi-line comments, which will not be triggered until there is at least one <code class="docutils literal notranslate"><span class="pre">space</span></code> outside the multi-line comment):</p></li>
+</ul>
+<p><img alt="codegen from multi-line comments" src="../../assets/img/codegen_multi_line.png" /></p>
+<ul class="simple">
+<li><p>Automatically complete multi-line comments:</p></li>
+</ul>
+<p><img alt="auto complete" src="../../assets/img/codegen_auto_complete.jpg" /></p>
+</section>
+</section>
+<section id="chat-with-ai-assistant">
+<h3>Chat with AI assistant<a class="headerlink" href="#chat-with-ai-assistant" title="Link to this heading">¶</a></h3>
+<p>You can start a conversation with the AI programming assistant by clicking on the robot icon in the plugin bar on the left:</p>
+<p><img alt="icon" src="../../assets/img/codegen_icon.png" /></p>
+<p>Then you can see the conversation window on the left, where you can chat with AI assistant:</p>
+<p><img alt="dialog" src="../../assets/img/codegen_dialog.png" /></p>
+<p>There are 4 areas worth noting as shown in the screenshot above:</p>
+<ol class="arabic simple">
+<li><p>Enter and submit your question</p></li>
+<li><p>Your previous questions</p></li>
+<li><p>Answers from AI assistant (Code will be highlighted properly according to the programming language it is written in, also support streaming output)</p></li>
+<li><p>Copy or replace code with one click (Note that you need to select the code in the editor first and then click “replace”, otherwise the code will be inserted)</p></li>
+</ol>
+<p>You can also select the code in the editor and ask the AI assistant questions about the code directly.
+For example:</p>
+<ul class="simple">
+<li><p>Select code</p></li>
+</ul>
+<p><img alt="select code" src="../../assets/img/codegen_select_code.png" /></p>
+<ul class="simple">
+<li><p>Ask question and get answer</p></li>
+</ul>
+<p><img alt="qna" src="../../assets/img/codegen_qna.png" /></p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Alberto Gallegos
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Build MegaService of CodeGen on Xeon</a><ul>
+<li><a class="reference internal" href="#create-an-aws-xeon-instance">🚀 Create an AWS Xeon Instance</a></li>
+<li><a class="reference internal" href="#build-docker-images">🚀 Build Docker Images</a><ul>
+<li><a class="reference internal" href="#git-clone-genaicomps">1. Git Clone GenAIComps</a></li>
+<li><a class="reference internal" href="#build-the-llm-docker-image">2. Build the LLM Docker Image</a></li>
+<li><a class="reference internal" href="#build-the-megaservice-docker-image">3. Build the MegaService Docker Image</a></li>
+<li><a class="reference internal" href="#build-the-ui-docker-image">4. Build the UI Docker Image</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#start-microservices-and-megaservice">🚀 Start Microservices and MegaService</a><ul>
+<li><a class="reference internal" href="#setup-environment-variables">Setup Environment Variables</a></li>
+<li><a class="reference internal" href="#start-the-docker-containers-for-all-services">Start the Docker Containers for All Services</a></li>
+<li><a class="reference internal" href="#validate-the-microservices-and-megaservice">Validate the MicroServices and MegaService</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#launch-the-ui">🚀 Launch the UI</a></li>
+<li><a class="reference internal" href="#launch-the-react-based-ui-optional">🚀 Launch the React Based UI (Optional)</a></li>
+<li><a class="reference internal" href="#install-copilot-vscode-extension-from-plugin-marketplace-as-the-frontend">Install Copilot VSCode extension from Plugin Marketplace as the frontend</a><ul>
+<li><a class="reference internal" href="#how-to-use">How to Use</a><ul>
+<li><a class="reference internal" href="#service-url-setting">Service URL Setting</a></li>
+<li><a class="reference internal" href="#customize">Customize</a></li>
+<li><a class="reference internal" href="#code-suggestion">Code Suggestion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#chat-with-ai-assistant">Chat with AI assistant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>
