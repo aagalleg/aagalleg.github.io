@@ -36,6 +36,7 @@ jobs:
 
       - name: Init new repo in dist folder and commit generated files
         run: |
+          chown 1000:1000 ./ -R
           cd docs/build/html/
           git init
           touch .nojekyll
