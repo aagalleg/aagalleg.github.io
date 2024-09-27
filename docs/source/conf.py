@@ -29,6 +29,21 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'furo'
-html_static_path = ['_static']
-html_show_sourcelink = True
+try:
+    import sphinx_rtd_theme
+except ImportError:
+    sys.stderr.write('Warning: sphinx_rtd_theme missing. Use pip to install it.\n')
+else:
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+    html_theme_options = {
+        'canonical_url': '',
+        'analytics_id': 'G-3QH5804YP8',
+        'logo_only': False,
+        'display_version': True,
+        #'prev_next_buttons_location': 'None',
+        # Toc options
+        'collapse_navigation': False,
+        'sticky_navigation': True,
+        'navigation_depth': 3,
+    }
