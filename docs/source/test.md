@@ -129,7 +129,7 @@ docker build --no-cache -t opea/reranking-tei:latest --build-arg https_proxy=$ht
 
 We build the vllm docker image from source
 
-[//]: # (matrix: [tgi,vllm,x]:vllm:curl)
+[//]: # (matrix: tgi,vllm,x;curl)
 Hola
 ```
 git clone https://github.com/vllm-project/vllm.git
@@ -142,7 +142,7 @@ cd ..
 Next, we'll build the vllm microservice docker. This will set the entry point
 needed for the vllm to suit the ChatQnA examples
 
-[//]: # (matrix: [tgi,vllm,x]:vllm:curl)
+[//]: # (matrix: tgi,vllm,x;curl)
 Hola
 ```
 docker build --no-cache -t opea/llm-vllm:latest --build-arg https_proxy=$https_proxy \
@@ -153,7 +153,7 @@ docker build --no-cache -t opea/llm-vllm:latest --build-arg https_proxy=$https_p
 :::
 :::{tab-item} TGI
 :sync: TGI
-[//]: # (matrix: [tgi,vllm,x]:tgi:curl)
+[//]: # (matrix: tgi,vllm,x;curl)
 Hola
 ```
 docker build --no-cache -t opea/llm-tgi:latest --build-arg https_proxy=$https_proxy \
