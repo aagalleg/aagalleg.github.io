@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build MegaService of CodeGen on Xeon &mdash; TestOp 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Single node on-prem deployment with vLLM or TGI on Xeon Scalable processors" href="test.html" />
+    <link rel="prev" title="TestOp" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            TestOp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Build MegaService of CodeGen on Xeon</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-an-aws-xeon-instance">🚀 Create an AWS Xeon Instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-docker-images">🚀 Build Docker Images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#git-clone-genaicomps">1. Git Clone GenAIComps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-llm-docker-image">2. Build the LLM Docker Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-megaservice-docker-image">3. Build the MegaService Docker Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-ui-docker-image">4. Build the UI Docker Image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#start-microservices-and-megaservice">🚀 Start Microservices and MegaService</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-environment-variables">Setup Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-the-docker-containers-for-all-services">Start the Docker Containers for All Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validate-the-microservices-and-megaservice">Validate the MicroServices and MegaService</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#launch-the-ui">🚀 Launch the UI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#launch-the-react-based-ui-optional">🚀 Launch the React Based UI (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-copilot-vscode-extension-from-plugin-marketplace-as-the-frontend">Install Copilot VSCode extension from Plugin Marketplace as the frontend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-use">How to Use</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chat-with-ai-assistant">Chat with AI assistant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Single node on-prem deployment with vLLM or TGI on Xeon Scalable processors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#prepare-building-pulling-docker-images">Prepare (Building / Pulling) Docker images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test.html#build-pull-microservice-images">Build/Pull Microservice images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#build-mega-service-images">Build Mega Service images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#build-other-service-images">Build Other Service images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#sanity-check">Sanity Check</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#use-case-setup">Use Case Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test.html#dataprep">Dataprep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#vectordb">VectorDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#embedding-service">Embedding Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#reranking-service">Reranking Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#llm-service">LLM Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#megaservice">Megaservice</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#deploy-the-use-case">Deploy the use case</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test.html#validate-microservice">Validate microservice</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#interacting-with-chatqna-deployment">Interacting with ChatQnA deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test.html#dataprep-microservice-optional">Dataprep Microservice（Optional）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#tei-embedding-service">TEI Embedding Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#embedding-microservice">Embedding Microservice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#retriever-microservice">Retriever Microservice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#tei-reranking-service">TEI Reranking Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#reranking-microservice">Reranking Microservice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#vllm-and-tgi-service">vLLM and TGI Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#llm-microservice">LLM Microservice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#id1">MegaService</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#check-docker-container-log">Check docker container log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html#launch-ui">Launch UI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test.html#basic-ui">Basic UI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#conversational-ui">Conversational UI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test.html#stop-the-services">Stop the services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TestOp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Build MegaService of CodeGen on Xeon</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/usage.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="build-megaservice-of-codegen-on-xeon">
+<h1>Build MegaService of CodeGen on Xeon<a class="headerlink" href="#build-megaservice-of-codegen-on-xeon" title="Link to this heading">¶</a></h1>
+<p>This document outlines the deployment process for a CodeGen application utilizing the <a class="reference external" href="https://github.com/opea-project/GenAIComps.git">GenAIComps</a> microservice pipeline on Intel Xeon server. The steps include Docker images creation, container deployment via Docker Compose, and service execution to integrate microservices such as <code class="docutils literal notranslate"><span class="pre">llm</span></code>. We will publish the Docker images to Docker Hub soon, further simplifying the deployment process for this service.</p>
+<section id="create-an-aws-xeon-instance">
+<h2>🚀 Create an AWS Xeon Instance<a class="headerlink" href="#create-an-aws-xeon-instance" title="Link to this heading">¶</a></h2>
+<p>To run the example on an AWS Xeon instance, start by creating an AWS account if you don’t have one already. Then, get started with the <a class="reference external" href="https://console.aws.amazon.com/ec2/v2/home">EC2 Console</a>. AWS EC2 M7i, C7i, C7i-flex and M7i-flex instances are next-generation compute optimized instances powered by custom 4th Generation Intel Xeon Scalable processors (code named Sapphire Rapids). These instances are optimized for high-performance computing and demanding workloads.</p>
+<p>For detailed information about these instance types, you can refer to <a class="reference external" href="https://aws.amazon.com/ec2/instance-types/m7i/">m7i</a>. Once you’ve chosen the appropriate instance type, proceed with configuring your instance settings, including network configurations, security groups, and storage options.</p>
+<p>After launching your instance, you can connect to it using SSH (for Linux instances) or Remote Desktop Protocol (RDP) (for Windows instances). From there, you’ll have full access to your Xeon server, allowing you to install, configure, and manage your applications as needed.</p>
+</section>
+<section id="build-docker-images">
+<h2>🚀 Build Docker Images<a class="headerlink" href="#build-docker-images" title="Link to this heading">¶</a></h2>
+<p>First of all, you need to build the Docker images locally. This step can be ignored after the Docker images published to the Docker Hub.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">WORKSPACE</span><span class="o">=</span><span class="nv">$PWD</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p $WORKSPACE &amp;&amp; cd $WORKSPACE
+</pre></div>
+</div>
+<section id="git-clone-genaicomps">
+<h3>1. Git Clone GenAIComps<a class="headerlink" href="#git-clone-genaicomps" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/opea-project/GenAIComps.git
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIComps
+git<span class="w"> </span>checkout<span class="w"> </span>v0.9
+</pre></div>
+</div>
+</section>
+<section id="build-the-llm-docker-image">
+<h3>2. Build the LLM Docker Image<a class="headerlink" href="#build-the-llm-docker-image" title="Link to this heading">¶</a></h3>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>opea/llm-tgi:latest<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$https_proxy</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span><span class="w"> </span>-f<span class="w"> </span>comps/llms/text-generation/tgi/Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="build-the-megaservice-docker-image">
+<h3>3. Build the MegaService Docker Image<a class="headerlink" href="#build-the-megaservice-docker-image" title="Link to this heading">¶</a></h3>
+<p>To construct the Mega Service, we utilize the <a class="reference external" href="https://github.com/opea-project/GenAIComps.git">GenAIComps</a> microservice pipeline within the <code class="docutils literal notranslate"><span class="pre">codegen.py</span></code> Python script. Build MegaService Docker image via the command below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/opea-project/GenAIExamples
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/
+git<span class="w"> </span>checkout<span class="w"> </span>v0.9
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/CodeGen/docker
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>opea/codegen:latest<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$https_proxy</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span><span class="w"> </span>-f<span class="w"> </span>Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="build-the-ui-docker-image">
+<h3>4. Build the UI Docker Image<a class="headerlink" href="#build-the-ui-docker-image" title="Link to this heading">¶</a></h3>
+<p>Build the frontend Docker image via the command below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/CodeGen/docker/ui/
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>opea/codegen-ui:latest<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$https_proxy</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span><span class="w"> </span>-f<span class="w"> </span>./docker/Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Then run the command <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">images</span></code>, you will have the following 3 Docker Images:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">opea/llm-tgi:latest</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opea/codegen:latest</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opea/codegen-ui:latest</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="start-microservices-and-megaservice">
+<h2>🚀 Start Microservices and MegaService<a class="headerlink" href="#start-microservices-and-megaservice" title="Link to this heading">¶</a></h2>
+<p>The CodeGen megaservice manages a single microservice called LLM within a Directed Acyclic Graph (DAG). In the diagram above, the LLM microservice is a language model microservice that generates code snippets based on the user’s input query. The TGI service serves as a text generation interface, providing a RESTful API for the LLM microservice. The CodeGen Gateway acts as the entry point for the CodeGen application, invoking the Megaservice to generate code snippets in response to the user’s input query.</p>
+<p>The mega flow of the CodeGen application, from user’s input query to the application’s output response, is as follows:</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+    subgraph CodeGen
+        direction LR
+        A[User] --&gt; |Input query| B[CodeGen Gateway]
+        B --&gt; |Invoke| Megaservice
+        subgraph Megaservice[&quot;Megaservice&quot;]
+            direction TB
+            C((LLM&lt;br&gt;9000)) -. Post .-&gt; D{{TGI Service&lt;br&gt;8028}}
+        end
+        Megaservice --&gt; |Output| E[Response]
+    end
+
+    subgraph Legend
+        direction LR
+        G([Microservice]) ==&gt; H([Microservice])
+        I([Microservice]) -.-&gt; J{{Server API}}
+    end
+</pre></div>
+</div>
+<section id="setup-environment-variables">
+<h3>Setup Environment Variables<a class="headerlink" href="#setup-environment-variables" title="Link to this heading">¶</a></h3>
+<p>Since the <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> will consume some environment variables, you need to setup them in advance as below.</p>
+<p><strong>Append the value of the public IP address to the no_proxy list</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export your_no_proxy=${your_no_proxy},&quot;External_Public_IP&quot;
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">no_proxy</span><span class="o">=</span><span class="si">${</span><span class="nv">no_proxy</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span><span class="si">${</span><span class="nv">http_proxy</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span><span class="si">${</span><span class="nv">https_proxy</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">host_ip</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-I<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">HUGGINGFACEHUB_API_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">your_hf_api_token</span><span class="si">}</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LLM_MODEL_ID</span><span class="o">=</span><span class="s2">&quot;meta-llama/CodeLlama-7b-hf&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TGI_LLM_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span><span class="s2">:8028&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MEGA_SERVICE_HOST_IP</span><span class="o">=</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LLM_SERVICE_HOST_IP</span><span class="o">=</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BACKEND_SERVICE_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://</span><span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span><span class="s2">:7778/v1/codegen&quot;</span>
+</pre></div>
+</div>
+<p>Note: Please replace the <code class="docutils literal notranslate"><span class="pre">host_ip</span></code> with you external IP address, do not use <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p>
+</section>
+<section id="start-the-docker-containers-for-all-services">
+<h3>Start the Docker Containers for All Services<a class="headerlink" href="#start-the-docker-containers-for-all-services" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKSPACE</span>/GenAIExamples/CodeGen/docker/xeon
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+</section>
+<section id="validate-the-microservices-and-megaservice">
+<h3>Validate the MicroServices and MegaService<a class="headerlink" href="#validate-the-microservices-and-megaservice" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>TGI Service</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://<span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>:8028/generate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;inputs&quot;:&quot;Implement a high-level API for a TODO list application. The API takes as input an operation request and updates the TODO list in place. If the request is invalid, raise an exception.&quot;,&quot;parameters&quot;:{&quot;max_new_tokens&quot;:256, &quot;do_sample&quot;: true}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>LLM Microservices</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://<span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>:9000/v1/chat/completions<span class="se">\</span>
+<span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;Implement a high-level API for a TODO list application. The API takes as input an operation request and updates the TODO list in place. If the request is invalid, raise an exception.&quot;,&quot;max_new_tokens&quot;:256,&quot;top_k&quot;:10,&quot;top_p&quot;:0.95,&quot;typical_p&quot;:0.95,&quot;temperature&quot;:0.01,&quot;repetition_penalty&quot;:1.03,&quot;streaming&quot;:true}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>MegaService</p></li>
+</ol>
+<p>Hola</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://<span class="si">${</span><span class="nv">host_ip</span><span class="si">}</span>:7778/v1/codegen<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">     &quot;messages&quot;: &quot;Implement a high-level API for a TODO list application. The API takes as input an operation request and updates the TODO list in place. If the request is invalid, raise an exception.&quot;</span>
+<span class="s1">     }&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="launch-the-ui">
+<h2>🚀 Launch the UI<a class="headerlink" href="#launch-the-ui" title="Link to this heading">¶</a></h2>
+<p>To access the frontend, open the following URL in your browser: <code class="docutils literal notranslate"><span class="pre">http://{host_ip}:5173</span></code>. By default, the UI runs on port 5173 internally. If you prefer to use a different host port to access the frontend, you can modify the port mapping in the <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> file as shown below:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nt">codegen-xeon-ui-server</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">opea/codegen-ui:latest</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:5173&quot;</span>
+</pre></div>
+</div>
+<p><img alt="project-screenshot" src="../../assets/img/codeGen_ui_init.jpg" /></p>
+<p>Here is an example of running CodeGen in the UI:</p>
+<p><img alt="project-screenshot" src="../../assets/img/codeGen_ui_response.png" /></p>
+</section>
+<section id="launch-the-react-based-ui-optional">
+<h2>🚀 Launch the React Based UI (Optional)<a class="headerlink" href="#launch-the-react-based-ui-optional" title="Link to this heading">¶</a></h2>
+<p>To access the React-based frontend, modify the UI service in the <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> file. Replace <code class="docutils literal notranslate"><span class="pre">codegen-xeon-ui-server</span></code> service with the <code class="docutils literal notranslate"><span class="pre">codegen-xeon-react-ui-server</span></code> service as per the config below:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">codegen-xeon-react-ui-server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${REGISTRY:-opea}/codegen-react-ui:${TAG:-latest}</span>
+<span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codegen-xeon-react-ui-server</span>
+<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_proxy=${no_proxy}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https_proxy=${https_proxy}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http_proxy=${http_proxy}</span>
+<span class="w">  </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codegen-xeon-backend-server</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5174:80&quot;</span>
+<span class="w">  </span><span class="nt">ipc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="w">  </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+</pre></div>
+</div>
+<p><img alt="project-screenshot" src="../../assets/img/codegen_react.png" /></p>
+</section>
+<section id="install-copilot-vscode-extension-from-plugin-marketplace-as-the-frontend">
+<h2>Install Copilot VSCode extension from Plugin Marketplace as the frontend<a class="headerlink" href="#install-copilot-vscode-extension-from-plugin-marketplace-as-the-frontend" title="Link to this heading">¶</a></h2>
+<p>In addition to the Svelte UI, users can also install the Copilot VSCode extension from the Plugin Marketplace as the frontend.</p>
+<p>Install <code class="docutils literal notranslate"><span class="pre">Neural</span> <span class="pre">Copilot</span></code> in VSCode as below.</p>
+<p><img alt="Install-screenshot" src="../../assets/img/codegen_copilot.png" /></p>
+<section id="how-to-use">
+<h3>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading">¶</a></h3>
+<section id="service-url-setting">
+<h4>Service URL Setting<a class="headerlink" href="#service-url-setting" title="Link to this heading">¶</a></h4>
+<p>Please adjust the service URL in the extension settings based on the endpoint of the code generation backend service.</p>
+<p><img alt="Setting-screenshot" src="../../assets/img/codegen_settings.png" />
+<img alt="Setting-screenshot" src="../../assets/img/codegen_endpoint.png" /></p>
+</section>
+<section id="customize">
+<h4>Customize<a class="headerlink" href="#customize" title="Link to this heading">¶</a></h4>
+<p>The Copilot enables users to input their corresponding sensitive information and tokens in the user settings according to their own needs. This customization enhances the accuracy and output content to better meet individual requirements.</p>
+<p><img alt="Customize" src="../../assets/img/codegen_customize.png" /></p>
+</section>
+<section id="code-suggestion">
+<h4>Code Suggestion<a class="headerlink" href="#code-suggestion" title="Link to this heading">¶</a></h4>
+<p>To trigger inline completion, you’ll need to type <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">{your</span> <span class="pre">keyword}</span> <span class="pre">(start</span> <span class="pre">with</span> <span class="pre">your</span> <span class="pre">programming</span> <span class="pre">language's</span> <span class="pre">comment</span> <span class="pre">keyword,</span> <span class="pre">like</span> <span class="pre">//</span> <span class="pre">in</span> <span class="pre">C++</span> <span class="pre">and</span> <span class="pre">#</span> <span class="pre">in</span> <span class="pre">python)</span></code>. Make sure the <code class="docutils literal notranslate"><span class="pre">Inline</span> <span class="pre">Suggest</span></code> is enabled from the VS Code Settings.
+For example:</p>
+<p><img alt="code suggestion" src="../../assets/img/codegen_suggestion.png" /></p>
+<p>To provide programmers with a smooth experience, the Copilot supports multiple ways to trigger inline code suggestions. If you are interested in the details, they are summarized as follows:</p>
+<ul class="simple">
+<li><p>Generate code from single-line comments: The simplest way introduced before.</p></li>
+<li><p>Generate code from consecutive single-line comments:</p></li>
+</ul>
+<p><img alt="codegen from single-line comments" src="../../assets/img/codegen_single_line.png" /></p>
+<ul class="simple">
+<li><p>Generate code from multi-line comments, which will not be triggered until there is at least one <code class="docutils literal notranslate"><span class="pre">space</span></code> outside the multi-line comment):</p></li>
+</ul>
+<p><img alt="codegen from multi-line comments" src="../../assets/img/codegen_multi_line.png" /></p>
+<ul class="simple">
+<li><p>Automatically complete multi-line comments:</p></li>
+</ul>
+<p><img alt="auto complete" src="../../assets/img/codegen_auto_complete.jpg" /></p>
+</section>
+</section>
+<section id="chat-with-ai-assistant">
+<h3>Chat with AI assistant<a class="headerlink" href="#chat-with-ai-assistant" title="Link to this heading">¶</a></h3>
+<p>You can start a conversation with the AI programming assistant by clicking on the robot icon in the plugin bar on the left:</p>
+<p><img alt="icon" src="../../assets/img/codegen_icon.png" /></p>
+<p>Then you can see the conversation window on the left, where you can chat with AI assistant:</p>
+<p><img alt="dialog" src="../../assets/img/codegen_dialog.png" /></p>
+<p>There are 4 areas worth noting as shown in the screenshot above:</p>
+<ol class="arabic simple">
+<li><p>Enter and submit your question</p></li>
+<li><p>Your previous questions</p></li>
+<li><p>Answers from AI assistant (Code will be highlighted properly according to the programming language it is written in, also support streaming output)</p></li>
+<li><p>Copy or replace code with one click (Note that you need to select the code in the editor first and then click “replace”, otherwise the code will be inserted)</p></li>
+</ol>
+<p>You can also select the code in the editor and ask the AI assistant questions about the code directly.
+For example:</p>
+<ul class="simple">
+<li><p>Select code</p></li>
+</ul>
+<p><img alt="select code" src="../../assets/img/codegen_select_code.png" /></p>
+<ul class="simple">
+<li><p>Ask question and get answer</p></li>
+</ul>
+<p><img alt="qna" src="../../assets/img/codegen_qna.png" /></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="TestOp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test.html" class="btn btn-neutral float-right" title="Single node on-prem deployment with vLLM or TGI on Xeon Scalable processors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Alberto Gallegos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3QH5804YP8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-3QH5804YP8', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>
