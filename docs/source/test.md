@@ -51,6 +51,7 @@ git clone https://github.com/opea-project/GenAIExamples.git
 ```
 
 Checkout the release tag
+
 [//]: # (action: capture)
 ```
 cd GenAIComps
@@ -69,6 +70,7 @@ export HUGGINGFACEHUB_API_TOKEN="Your_Huggingface_API_Token"
 
 The example requires you to set the `host_ip` to deploy the microservices on
 endpoint enabled with ports. Set the host_ip env variable
+
 [//]: # (action: capture)
 ```
 export host_ip=$(hostname -I | awk '{print $1}')
@@ -98,6 +100,7 @@ the images will be pushed to docker hub soon by Intel.
 From within the `GenAIComps` folder
 
 #### Build Dataprep Image
+
 [//]: # (action: capture)
 ```
 docker build --no-cache -t opea/dataprep-redis:latest --build-arg https_proxy=$https_proxy \
@@ -105,6 +108,7 @@ docker build --no-cache -t opea/dataprep-redis:latest --build-arg https_proxy=$h
 ```
 
 #### Build Embedding Image
+
 [//]: # (action: capture)
 ```
 docker build --no-cache -t opea/embedding-tei:latest --build-arg https_proxy=$https_proxy \
@@ -112,6 +116,7 @@ docker build --no-cache -t opea/embedding-tei:latest --build-arg https_proxy=$ht
 ```
 
 #### Build Retriever Image
+
 [//]: # (action: capture)
 ```
  docker build --no-cache -t opea/retriever-redis:latest --build-arg https_proxy=$https_proxy \
@@ -119,6 +124,7 @@ docker build --no-cache -t opea/embedding-tei:latest --build-arg https_proxy=$ht
 ```
 
 #### Build Rerank Image
+
 [//]: # (action: capture)
 ```
 docker build --no-cache -t opea/reranking-tei:latest --build-arg https_proxy=$https_proxy \
@@ -156,6 +162,7 @@ docker build --no-cache -t opea/llm-vllm:latest --build-arg https_proxy=$https_p
 :::
 :::{tab-item} TGI
 :sync: TGI
+
 [//]: # (variants: tgi;capture)
 ```
 docker build --no-cache -t opea/llm-tgi:latest --build-arg https_proxy=$https_proxy \
@@ -175,12 +182,14 @@ on. You can also add newer or remove some microservices and customize the
 megaservice to suit the needs.
 
 Build the megaservice image for this use case
+
 [//]: # (action: capture)
 ```
 cd ..
 cd GenAIExamples/ChatQnA
 git checkout tags/v1.0
 ```
+
 [//]: # (action: capture)
 ```
 docker build --no-cache -t opea/chatqna:latest --build-arg https_proxy=$https_proxy \
@@ -194,6 +203,7 @@ docker build --no-cache -t opea/chatqna:latest --build-arg https_proxy=$https_pr
 As mentioned, you can build 2 modes of UI
 
 *Basic UI*
+
 [//]: # (action: capture)
 ```
 cd GenAIExamples/ChatQnA/ui/
@@ -203,6 +213,7 @@ docker build --no-cache -t opea/chatqna-ui:latest --build-arg https_proxy=$https
 
 *Conversation UI*
 If you want a conversational experience with chatqna megaservice.
+
 [//]: # (action: capture)
 ```
 cd GenAIExamples/ChatQnA/ui/
@@ -343,6 +354,7 @@ above mentioned services as containers.
 ::::{tab-set}
 :::{tab-item} vllm
 :sync: vllm
+
 [//]: # (variants: vllm;compose)
 ```
 cd GenAIExamples/ChatQnA/docker_compose/intel/cpu/xeon
@@ -351,6 +363,7 @@ docker compose -f compose_vllm.yaml up -d
 :::
 :::{tab-item} TGI
 :sync: TGI
+
 [//]: # (variants: tgi;compose)
 ```
 cd GenAIExamples/ChatQnA/docker_compose/intel/cpu/xeon
@@ -470,6 +483,7 @@ This command updates a knowledge base by uploading a local file for processing.
 Update the file path according to your environment.
 
 Add Knowledge Base via HTTP Links:
+
 [//]: # (action: curl)
 ```
 curl -X POST "http://${host_ip}:6007/v1/dataprep" \
@@ -480,6 +494,7 @@ curl -X POST "http://${host_ip}:6007/v1/dataprep" \
 This command updates a knowledge base by submitting a list of HTTP links for processing.
 
 Also, you are able to get the file list that you uploaded:
+
 [//]: # (action: curl)
 ```
 curl -X POST "http://${host_ip}:6007/v1/dataprep/get_file" \
@@ -490,6 +505,7 @@ curl -X POST "http://${host_ip}:6007/v1/dataprep/get_file" \
 To delete the file/link you uploaded you can use the following commands:
 
 #### Delete link
+
 [//]: # (action: curl)
 ```
 # The dataprep service will add a .txt postfix for link file
@@ -500,6 +516,7 @@ curl -X POST "http://${host_ip}:6007/v1/dataprep/delete_file" \
 ```
 
 #### Delete file
+
 [//]: # (action: curl)
 ```
 curl -X POST "http://${host_ip}:6007/v1/dataprep/delete_file" \
@@ -508,6 +525,7 @@ curl -X POST "http://${host_ip}:6007/v1/dataprep/delete_file" \
 ```
 
 #### Delete all uploaded files and links
+
 [//]: # (action: curl)
 ```
 curl -X POST "http://${host_ip}:6007/v1/dataprep/delete_file" \
@@ -519,6 +537,7 @@ curl -X POST "http://${host_ip}:6007/v1/dataprep/delete_file" \
 The TEI embedding service takes in a string as input, embeds the string into a
 vector of a specific length determined by the embedding model and returns this
 embedded vector.
+
 [//]: # (action: curl)
 ```
 curl ${host_ip}:6006/embed \
@@ -536,6 +555,7 @@ The embedding microservice depends on the TEI embedding service. In terms of
 input parameters, it takes in a string, embeds it into a vector using the TEI
 embedding service and pads other default parameters that are required for the
 retrieval microservice and returns it.
+
 [//]: # (action: curl)
 ```
 curl http://${host_ip}:6000/v1/embeddings\
@@ -552,6 +572,7 @@ model EMBEDDING_MODEL_ID="BAAI/bge-base-en-v1.5", which vector size is 768.
 
 Check the vector dimension of your embedding model and set
 `your_embedding` dimension equal to it.
+
 [//]: # (action: curl)
 ```
 export your_embedding=$(python3 -c "import random; embedding = [random.uniform(-1, 1) for _ in range(768)]; print(embedding)")
@@ -580,6 +601,7 @@ service. It consumes the query and list of documents and returns the document
 index based on decreasing order of the similarity score. The document
 corresponding to the returned index with the highest score is the most relevant
 document for the input query.
+
 [//]: # (action: curl)
 ```
 curl http://${host_ip}:8808/rerank \
@@ -596,6 +618,7 @@ Output is:  `[{"index":1,"score":0.9988041},{"index":0,"score":0.022948774}]`
 
 The reranking microservice consumes the TEI Reranking service and pads the
 response with default parameters required for the llm microservice.
+
 [//]: # (action: curl)
 ```
 curl http://${host_ip}:8000/v1/reranking\
@@ -610,6 +633,7 @@ documents and it outputs the most relevant document to the initial query along
 with other default parameter such as temperature, `repetition_penalty`,
 `chat_template` and so on. We can also get top n documents by setting `top_n` as one
 of the input parameters. For example:
+
 [//]: # (action: curl)
 ```
 curl http://${host_ip}:8000/v1/reranking\
@@ -860,6 +884,7 @@ compose.yaml is the mega service docker-compose configuration file.
 
 :::{tab-item} vllm
 :sync: vllm
+
 [//]: # (variants: vllm;compose)
 ```
 docker compose -f ./docker_compose/intel/cpu/xeon/compose_vllm.yaml logs
@@ -867,6 +892,7 @@ docker compose -f ./docker_compose/intel/cpu/xeon/compose_vllm.yaml logs
 :::
 :::{tab-item} TGI
 :sync: TGI
+
 [//]: # (variants: tgi;compose)
 ```
 docker compose -f ./docker_compose/intel/cpu/xeon/compose.yaml logs
@@ -922,6 +948,7 @@ Once you are done with the entire pipeline and wish to stop and remove all the c
 
 :::{tab-item} vllm
 :sync: vllm
+
 [//]: # (variants: vllm;compose)
 ```
 docker compose -f compose_vllm.yaml down
@@ -929,6 +956,7 @@ docker compose -f compose_vllm.yaml down
 :::
 :::{tab-item} TGI
 :sync: TGI
+
 [//]: # (variants: tgi;compose)
 ```
 docker compose -f compose.yaml down
